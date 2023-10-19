@@ -94,7 +94,7 @@ const  display = function(arr){
   }
   
 }
-display(account1.movements);
+
 
 //// Task -2 
 //Computing Username
@@ -118,7 +118,7 @@ const displayBalance = function(accArr){
   },0);
   return balance;
 }
-labelBalance.textContent = `${displayBalance(account1.movements)}💲`;
+
 
 ///Task-3
 //Display Deposits & Withdrawals
@@ -142,14 +142,41 @@ const displaySummary = function(accArr){
   labelSumOut.textContent = `${Math.abs(totalWithdrawals)}💲`;
   //Interest
   const interestArr = depositsArr.map(function(val){
-    return ((val*1.2)/100);
+    return ((val*currentAccount.interestRate)/100);
   });
   const totalInterest = interestArr.reduce(function(acc,val){
     return acc+val;
   },0);
   labelSumInterest.textContent = `${totalInterest}💲`;
 }
-displaySummary(account1.movements);
+
+let currentAccount;
+///Adding Event Handlers
+btnLogin.addEventListener('click', function(e){
+  e.preventDefault(); //prevent from submitting
+  currentAccount = accounts.find(function(acc){
+    return acc.username===inputLoginUsername.value;
+  });
+  if(currentAccount&&currentAccount.pin===Number(inputLoginPin.value)){
+      //Display UI and message
+      labelWelcome.textContent = `Welcome ${currentAccount.owner.split(' ')[0]}`;
+      containerApp.style.opacity = 100;
+      //Clearing input fields ( i.e. user and pin )
+      inputLoginUsername.value = '';
+      inputLoginPin.value = '';
+      inputLoginUsername.blur();
+      inputLoginPin.blur();
+      //Display movements
+      display(currentAccount.movements);
+
+      //Display Balance
+      labelBalance.textContent = `${displayBalance(currentAccount.movements)}💲`;
+
+      //Display Summary
+      displaySummary(currentAccount.movements);
+
+  }
+});
 ///////////////////////////////////////
 // Coding Challenge #1
 
