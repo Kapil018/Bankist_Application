@@ -112,14 +112,23 @@ accounts.forEach(function(account){
 ///Task-3
 ///Display Balance( using reduce method)
 
-const displayBalance = function(accArr){
-  const balance = accArr.reduce(function(acc, value){
+const displayBalance = function(acc){
+  acc.balance = acc.movements.reduce(function(acc, value){
     return  acc+value;
   },0);
-  return balance;
+  labelBalance.textContent = `${acc.balance}💲`;
+  //return balance;
 }
+const updateUI = function(acc){
+  //Display movements
+  display(acc.movements);
 
+  //Display Balance
+  displayBalance(acc);
 
+  //Display Summary
+  displaySummary(acc.movements);
+}
 ///Task-3
 //Display Deposits & Withdrawals
 
@@ -158,25 +167,183 @@ btnLogin.addEventListener('click', function(e){
     return acc.username===inputLoginUsername.value;
   });
   if(currentAccount&&currentAccount.pin===Number(inputLoginPin.value)){
+
       //Display UI and message
       labelWelcome.textContent = `Welcome ${currentAccount.owner.split(' ')[0]}`;
       containerApp.style.opacity = 100;
+
       //Clearing input fields ( i.e. user and pin )
       inputLoginUsername.value = '';
       inputLoginPin.value = '';
       inputLoginUsername.blur();
       inputLoginPin.blur();
-      //Display movements
-      display(currentAccount.movements);
 
-      //Display Balance
-      labelBalance.textContent = `${displayBalance(currentAccount.movements)}💲`;
-
-      //Display Summary
-      displaySummary(currentAccount.movements);
+      //Update UI
+      updateUI(currentAccount);
 
   }
 });
+//console.log(accounts);
+//Implementing Transfer
+
+btnTransfer.addEventListener('click', function(e){
+  e.preventDefault();
+  let receiveracc = accounts.find(function(acc){
+    return acc.username===inputTransferTo.value;
+  });
+  let amount = Number(inputTransferAmount.value);
+  //console.log(receiveracc, amount);
+  if(amount>0&&
+    receiveracc&&
+    currentAccount.balance>=amount&&receiveracc.username!==currentAccount.username){
+      currentAccount.movements.push(-amount);
+      receiveracc.movements.push(amount);
+      updateUI(currentAccount);
+      inputTransferTo.value = inputTransferAmount.value = '';
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ///////////////////////////////////////
 // Coding Challenge #1
 
