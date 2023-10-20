@@ -224,6 +224,21 @@ btnClose.addEventListener('click', function(e){
   } 
 });
 
+//Implemeting Loan Request
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+  let amount = Number(inputLoanAmount.value);
+  //checking deposits using the "some method"
+  if(amount>0&&currentAccount.movements.some(function(val){
+    return val > (amount*0.1);
+  })){
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+    
+  }
+  inputLoanAmount.value = '';
+});
+
 
 
 
