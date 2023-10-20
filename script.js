@@ -203,6 +203,27 @@ btnTransfer.addEventListener('click', function(e){
   }
 });
 
+//Closing user Account 
+
+btnClose.addEventListener('click', function(e){
+  e.preventDefault();
+  let userToDelete = accounts.find(function(acc){
+    return acc.username === inputCloseUsername.value;
+  });
+  let userPin = accounts.find(function(acc){
+    return acc.pin === Number(inputClosePin.value);
+  });
+  if(userToDelete&&userPin){
+    let index = accounts.findIndex(function(acc){
+      return acc.username===userToDelete.username;
+    });
+    accounts.splice(index,1);
+    labelWelcome.textContent = `Log in to get started`;
+    containerApp.style.opacity = 0;
+    inputCloseUsername.value = inputClosePin.value = '';
+  } 
+});
+
 
 
 
