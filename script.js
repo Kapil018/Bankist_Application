@@ -76,11 +76,17 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 /// Implementing all the Tasks
 ///Task -1 
-const  display = function(arr){
+const  display = function(arr,sort=false){
   containerMovements.innerHTML = '';// Clearing all the initial values
+  let tempArr = arr;
+  if(sort==true){
+    tempArr = arr.slice().sort(function(a,b){
+      return a-b;
+    });
+  }
   let  msg = 'deposit';
-  for(let i=0;i<arr.length;i++){
-    if(arr[i]<0){
+  for(let i=0;i<tempArr.length;i++){
+    if(tempArr[i]<0){
       msg = 'withdrawal';
     }
     else{
@@ -88,7 +94,7 @@ const  display = function(arr){
     }
     const html = `<div class="movements__row">
                   <div class="movements__type movements__type--${msg}">${i+1} ${msg}</div>
-                  <div class="movements__value">${arr[i]}💲</div>
+                  <div class="movements__value">${tempArr[i]}💲</div>
                   </div>`
     containerMovements.insertAdjacentHTML("afterbegin",html);// At every iteration adding new row into the DOM tree at specified position.
   }
@@ -236,7 +242,15 @@ btnLoan.addEventListener('click', function(e){
     updateUI(currentAccount);
     
   }
-  inputLoanAmount.value = '';
+  inputLoanAmount.value = ''; 
+});
+
+//Activating the Sort Button
+let sort  = false;
+btnSort.addEventListener('click', function(e){
+  e.preventDefault();
+  display(currentAccount.movements,(!sort));
+  sort = !(sort);
 });
 
 
