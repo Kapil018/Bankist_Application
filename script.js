@@ -11,8 +11,8 @@ const account1 = {
   interestRate: 1.2, // %
   pin: 1111,
   movementsDates: [
-    '2019-11-18T21:31:17.178Z',
-    '2019-12-23T07:42:02.383Z',
+    '2023-11-01T21:31:17.178Z',
+    '2023-10-31T07:42:02.383Z',
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
@@ -141,14 +141,27 @@ const  display = function(arr,sort=false){
     else{
       msg = 'deposit';
     }
-    const timeAndDate = new Date(arr.movementsDates[i]);
-    const year = timeAndDate.getFullYear();
-    const month = String(timeAndDate.getMonth()+1);
-    console.log(month);
-    const date = String(timeAndDate.getDate());
+    const timeAndDate = calDateAndTime(new Date(arr.movementsDates[i]));
+    //console.log(typeof(timeAndDate));
+    const daysPassed = calDaysPassed(new Date(), new Date(arr.movementsDates[i]));
+    //console.log(daysPassed);
+    let displayDate;
+    if(daysPassed==0){
+      displayDate = `Today`;
+    }
+    else if(daysPassed==1){
+      displayDate = `Yesterday`;
+    }
+    else if(daysPassed<=7){
+      displayDate = `${daysPassed} days ago`;
+    }
+    else{
+      displayDate = timeAndDate;
+    }
+    //console.log(displayDate);
     const html = `<div class="movements__row">
                   <div class="movements__type movements__type--${msg}">${i+1} ${msg}</div>
-                  <div class="movements__date">${date.padStart(2,0)}/${month.padStart(2,0)}/${year}</div>
+                  <div class="movements__date">${displayDate}</div>
                   <div class="movements__value">${tempArr[i]}💲</div>
                   </div>`
     containerMovements.insertAdjacentHTML("afterbegin",html);// At every iteration adding new row into the DOM tree at specified position.
@@ -258,10 +271,6 @@ btnTransfer.addEventListener('click', function(e){
     receiveracc&&
     currentAccount.balance>=amount&&receiveracc.username!==currentAccount.username){
       currentAccount.movements.push(-amount);
-      // const timeAndDate = new Date();
-      // const year = timeAndDate.getFullYear();
-      // const month = String(timeAndDate.getMonth()+1);
-      // const date = String(timeAndDate.getDate());
       currentAccount.movementsDates.push(new Date());
       receiveracc.movements.push(amount);
       receiveracc.movementsDates.push(new Date());
@@ -316,15 +325,23 @@ btnSort.addEventListener('click', function(e){
 });
 
 //Adding Dates to Time 
-const timeAndDate = new Date();
-const year = timeAndDate.getFullYear();
-// console.log(year);
-const month = String(timeAndDate.getMonth()+1);
-console.log(month);
-const date = String(timeAndDate.getDate());
-// console.log(date);
-
-labelDate.textContent = `${date.padStart(2,0)}/${month.padStart(2,0)}/${year}`;
+const calDateAndTime = function(time){
+  // const year = time.getFullYear();
+  // const month = String(time.getMonth()+1);
+  // const date = String(time.getDate());
+  return new Intl.DateTimeFormat('en-GB', options).format(time);
+}
+//Implementing Days Passed
+const calDaysPassed = function(date1, date2){
+  return Math.round(Math.abs((date1-date2)/(1000*60*60*24)));
+}
+const options  ={
+  day  : 'numeric',
+  month : 'long',
+  year : 'numeric',
+};
+const time = new Date();
+labelDate.textContent = calDateAndTime(time);
 
 
 
